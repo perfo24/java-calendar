@@ -1,42 +1,64 @@
 package calendar;
 
-import java.util.Scanner;
-
 public class Calendar {
 
 	private static final int[] MAX_DAYS = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	private static final int[] LEAP_MAX_DAYS = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-	public int getMaxDaysOfMonth(int month) {
-		return MAX_DAYS[month - 1];
+	public boolean isLeapYear(int year) {
+		if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
+			return true;
+		else
+			return false;
 	}
 
-	public void printSampleCalendar() {
-		System.out.println("일 월 화 수 목 금 토");
+	public int getMaxDaysOfMonth(int year, int month) {
+		if (isLeapYear(year))
+			return LEAP_MAX_DAYS[month - 1];
+		else
+			return MAX_DAYS[month - 1];
+	}
+
+	public void printCalendar(int year, int month, String weekday) {
+		System.out.printf("  <<%4d년%2d월>>\n", year, month);
+		System.out.println("SU MO TU WE TH FR SA");
 		System.out.println("--------------------");
-		System.out.println(" 1  2  3  4  5  6  7");
-		System.out.println(" 8  9 10 11 12 13 14");
-		System.out.println("15 16 17 18 19 20 21");
-		System.out.println("22 23 24 25 26 27 28");
-	}
 
-	public static void main(String[] args) {
-		Calendar calendar = new Calendar();
-		calendar.printSampleCalendar();
-		Scanner scanner = new Scanner(System.in);
-
-		System.out.println("반복횟수를 입력하세요.");
-		int loop = scanner.nextInt();
-		int[] months = new int[loop];
-
-		System.out.println("월을 입력하세요.");
-		for (int i = 0; i < loop; i++) {
-			months[i] = scanner.nextInt();
+		int firstDay = 1;
+		switch (weekday) {
+		case "SU":
+			firstDay = 1;
+			break;
+		case "MO":
+			firstDay = 2;
+			break;
+		case "TU":
+			firstDay = 3;
+			break;
+		case "WE":
+			firstDay = 4;
+			break;
+		case "TH":
+			firstDay = 5;
+			break;
+		case "FR":
+			firstDay = 6;
+			break;
+		case "SA":
+			firstDay = 7;
+			break;
 		}
 
-		for (int i = 0; i < loop; i++) {
-			System.out.printf("%d월은 %d일까지 있습니다.\n", months[i], calendar.getMaxDaysOfMonth(months[i]));
-		}
-		scanner.close();
-	}
+		int maxDay = getMaxDaysOfMonth(year, month);
 
+		for (int i = 1; i < firstDay; i++) {
+			System.out.print("   ");
+		}
+		for (int i = 1; i <= maxDay; i++) {
+			System.out.printf("%3d", i);
+			if (i % 7 == (7 - firstDay + 1))
+				System.out.println();
+		}
+		System.out.println();
+	}
 }
