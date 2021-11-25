@@ -19,45 +19,47 @@ public class Calendar {
 			return MAX_DAYS[month - 1];
 	}
 
-	public void printCalendar(int year, int month, String weekday) {
+	public int getWeekday(int year, int month) {
+		int weekday = 0;
+		for (int i = 1583; i < year; i++) {
+			if (i % 4 == 0 && (i % 100 != 0 || i % 400 == 0))
+				weekday += 2;
+			else
+				weekday += 1;
+		}
+
+		for (int i = 1; i < month; i++) {
+			weekday += (getMaxDaysOfMonth(year, i) % 7);
+		}
+
+		weekday = weekday % 7;
+		if (weekday == 0)
+			weekday = 7;
+		return weekday;
+	}
+
+	public void printCalendar(int year, int month) {
+		int weekday = getWeekday(year, month);
+
 		System.out.printf("  <<%4d년%2d월>>\n", year, month);
 		System.out.println("SU MO TU WE TH FR SA");
 		System.out.println("--------------------");
 
-		int firstDay = 1;
-		switch (weekday) {
-		case "SU":
-			firstDay = 1;
-			break;
-		case "MO":
-			firstDay = 2;
-			break;
-		case "TU":
-			firstDay = 3;
-			break;
-		case "WE":
-			firstDay = 4;
-			break;
-		case "TH":
-			firstDay = 5;
-			break;
-		case "FR":
-			firstDay = 6;
-			break;
-		case "SA":
-			firstDay = 7;
-			break;
-		}
-
 		int maxDay = getMaxDaysOfMonth(year, month);
 
-		for (int i = 1; i < firstDay; i++) {
+		for (int i = 1; i < weekday; i++) {
 			System.out.print("   ");
 		}
 		for (int i = 1; i <= maxDay; i++) {
 			System.out.printf("%3d", i);
-			if (i % 7 == (7 - firstDay + 1))
-				System.out.println();
+			if (weekday == 1) {
+				if (i % 7 == 0)
+					System.out.println();
+
+			} else {
+				if (i % 7 == (7 - weekday + 1))
+					System.out.println();
+			}
 		}
 		System.out.println();
 	}
